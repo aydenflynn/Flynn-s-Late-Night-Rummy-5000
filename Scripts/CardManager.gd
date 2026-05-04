@@ -26,6 +26,9 @@ func _ready() -> void:
 		$"../PlayerHand".draw_card(game_deck.pop_front())
 		
 	$"../Deck/RichTextLabel".text = str(game_deck.size())
+	
+	# display the players total score
+	$"../Player/RichTextLabel".text = "Score: " + str($"../Player".total_score)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -65,26 +68,31 @@ func handle_player_discards():
 		
 		$"../PlayerHand".update_hand_positions()
 		$"../Discard".update_dicard_card_positions()
+		
+		handle_round_over()
 	else:
-		print("Trying to discard more than 1 card")
+		print("Need 1 card selected to discard")
 	
 func handle_player_melds():
-	if selected_cards.size() >= 3:
-		for card in selected_cards:
-			card.is_selected = false
-			card.is_melded = true
-			
-		var temp_cards = selected_cards.duplicate()
-		print("meld button clicked")
-		$"../PlayerMelds".player_melds.append(temp_cards)
-		selected_cards.clear()
+	#TODO need to handle meld checking and for layoff of single card
+	#if selected_cards.size() >= 3:
+	for card in selected_cards:
+		card.is_selected = false
+		card.is_melded = true
 		
-		$"../PlayerMelds".update_meld_positions()
+	var temp_cards = selected_cards.duplicate()
+	
+	$"../PlayerMelds".player_melds.append(temp_cards)
+	selected_cards.clear()
+	
+	$"../PlayerMelds".update_meld_positions()
+	
+	$"../PlayerHand".update_hand_positions()
+	
+	handle_round_over()
 		
-		$"../PlayerHand".update_hand_positions()
-		
-	else:
-		print("Need minimum 3 cards to meld")
+	#else:
+		#print("Need minimum 3 cards to meld")
 	
 func handle_discard_pickup(card):
 	# handle multiple card pickup
@@ -118,6 +126,23 @@ func handle_discard_pickup(card):
 	$"../PlayerHand".update_hand_positions()
 	$"../Discard".update_dicard_card_positions()
 	
+func handle_round_over():
+	if $"../PlayerHand".player_hand.is_empty():
+		print("ROUND OVER")
+		for meld in range($"../PlayerMelds".player_melds.size()):
+			for card in $"../PlayerMelds".player_melds[meld]:
+				var temp_value = card.name
+				var value = temp_value.substr(1, temp_value.length())
+				
+				if value == "j" or value == "q" or value == "k" or value == "10":
+					$"../Player".total_score += 10
+				elif value == "a":
+					$"../Player".total_score += 15
+				else:
+					$"../Player".total_score += 5
+				
+		$"../Player/RichTextLabel".text = "Score: " + str($"../Player".total_score)
+		
 #func handle_player_hand_sorting(card):
 	#card_being_dragged = card
 	
