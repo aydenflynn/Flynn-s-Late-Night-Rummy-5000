@@ -9,6 +9,8 @@ var game_deck = ["c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10", "cj",
 	"d10", "dj", "dq", "dk", "da", "s2", "s3", "s4", "s5", "s6", "s7", "s8", 
 	"s9", "s10", "sj", "sq", "sk", "sa"]
 	
+var selected_cards = []
+	
 var card_being_dragged
 var screen_size
 
@@ -37,11 +39,22 @@ func draw_card():
 	$"../PlayerHand".draw_card(game_deck.pop_front())
 	$"../Deck/RichTextLabel".text = str(game_deck.size())
 	
-func handle_discard(card):
-	$"../Discard".discard_deck.append(card)
+func handle_select_card(card):
+	card.position.y -= 50
+	
+	selected_cards.append(card)
 	$"../PlayerHand".player_hand.erase(card)
 	
-	card.is_discarded = true 
+	$"../MeldArea".visible = true
+	$"../DiscardArea".visible = true
+	
+func handle_player_discards():
+	for card in selected_cards:
+		
+		$"../Discard".discard_deck.append(card)
+		selected_cards.erase(card)
+	
+		card.is_discarded = true 
 	
 	$"../PlayerHand".update_hand_positions()
 	$"../Discard".update_dicard_card_positions()
