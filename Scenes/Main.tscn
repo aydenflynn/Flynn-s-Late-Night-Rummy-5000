@@ -1,0 +1,52 @@
+[gd_scene format=3 uid="uid://bygesfimce7xi"]
+
+[ext_resource type="Script" uid="uid://c3eew7pw8l3un" path="res://Scenes/PlayerHand.gd" id="2_rgh2o"]
+[ext_resource type="Texture2D" uid="uid://dns1c2yko50m4" path="res://Assets/Deck.png" id="3_kln2b"]
+[ext_resource type="Script" uid="uid://8ow2c8qvnqmk" path="res://Scenes/CardManager.gd" id="3_pbw6q"]
+[ext_resource type="Texture2D" uid="uid://b7w8t5gbdgufb" path="res://Assets/CardSlot.png" id="3_rgh2o"]
+[ext_resource type="Script" uid="uid://c6s5ouktags7w" path="res://Scenes/Discard.gd" id="3_v1gob"]
+[ext_resource type="Script" uid="uid://uhdqjyi36c8h" path="res://InputManager.gd" id="5_pbw6q"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v1gob"]
+size = Vector2(180, 266.66663)
+
+[node name="Main" type="Node2D" unique_id=1008083499]
+
+[node name="PlayerHand" type="Node2D" parent="." unique_id=310581570]
+script = ExtResource("2_rgh2o")
+
+[node name="CardManager" type="Node2D" parent="." unique_id=693620218]
+script = ExtResource("3_pbw6q")
+
+[node name="Discard" type="Node2D" parent="." unique_id=1911439475]
+position = Vector2(420, 660)
+scale = Vector2(0.6, 0.6)
+script = ExtResource("3_v1gob")
+
+[node name="Sprite2D" type="Sprite2D" parent="Discard" unique_id=1002138189]
+texture = ExtResource("3_rgh2o")
+
+[node name="Deck" type="Node2D" parent="." unique_id=1274323632]
+position = Vector2(300, 660)
+scale = Vector2(0.6, 0.6)
+
+[node name="Sprite2D" type="Sprite2D" parent="Deck" unique_id=679720483]
+texture = ExtResource("3_kln2b")
+
+[node name="Area2D" type="Area2D" parent="Deck" unique_id=767899592]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Deck/Area2D" unique_id=1296359124]
+position = Vector2(0, -0.00012207031)
+shape = SubResource("RectangleShape2D_v1gob")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Deck" unique_id=225015644]
+offset_left = -28.615
+offset_top = -39.305
+offset_right = 11.385
+offset_bottom = 0.6949997
+scale = Vector2(3.245, 3.245)
+text = "45"
+
+[node name="InputManager" type="Node2D" parent="." unique_id=597449497]
+script = ExtResource("5_pbw6q")
