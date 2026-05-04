@@ -1,7 +1,6 @@
 extends Node2D
 
 var is_discarded: bool = false
-var is_selected: bool = false
 
 #
 #signal hovered
