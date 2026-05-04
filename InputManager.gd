@@ -53,14 +53,18 @@ func raycast_at_cursor():
 					$"../CardManager".handle_discard_pickup(card_found)
 				# if card is in players hand
 				else:
-					card_found.is_selected = true
 					$"../CardManager".handle_select_card(card_found)
-					
 					emit_signal("card_clicked")
+					
+		elif result_collision_mask == COLLISION_MASK_CARD and card_found.is_selected:
+			$"../CardManager".handle_deselect_card(card_found)
+			
 		elif result_collision_mask == COLLISION_MASK_DISCARD_AREA:
 			# don't want to be able to drag selected cards, so won't handle here
 			$"../CardManager".handle_player_discards()
+			
 		elif result_collision_mask == COLLISION_MASK_MELD_AREA:
 			pass
+			
 		elif result_collision_mask  == COLLISION_MASK_DECK:
 			$"../CardManager".draw_card()

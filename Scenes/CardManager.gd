@@ -38,15 +38,47 @@ func _process(delta: float) -> void:
 func draw_card():
 	$"../PlayerHand".draw_card(game_deck.pop_front())
 	$"../Deck/RichTextLabel".text = str(game_deck.size())
+
+func update_play_areas_status():
+	#if selected_cards.size() == 1:
+		#$"../DiscardArea".visible = true
+	#elif selected_cards.size() >= 3:
+		#$"../DiscardArea".visible = false
+		#$"../DiscardArea/Area2D/CollisionShape2D".disabled = true
+		#$"../MeldArea".visible = true
+	#else:
+		#$"../DiscardArea".visible = false
+		#$"../MeldArea".visible = false
 	
+	
+	if selected_cards.size() == 1:
+		print("hi")
+		$"..".add_child(get_node("res://Scenes/MeldArea.tscn"))
+	#elif selected_cards.size() >= 3:
+		#$"../DiscardArea".visible = false
+		#$"../DiscardArea/Area2D/CollisionShape2D".disabled = true
+		#$"../MeldArea".visible = true
+	#else:
+		#$"../DiscardArea".visible = false
+		#$"../MeldArea".visible = false
+		
 func handle_select_card(card):
+	card.is_selected = true
 	card.position.y -= 50
 	
 	selected_cards.append(card)
 	$"../PlayerHand".player_hand.erase(card)
+
+	update_play_areas_status()
 	
-	$"../MeldArea".visible = true
-	$"../DiscardArea".visible = true
+func handle_deselect_card(card):
+	card.is_selected = false
+	card.position.y += 50
+	
+	$"../PlayerHand".player_hand.append(card)
+	selected_cards.erase(card)
+	
+	update_play_areas_status()
 	
 func handle_player_discards():
 	for card in selected_cards:
