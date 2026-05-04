@@ -4,7 +4,8 @@ signal card_clicked
 
 const COLLISION_MASK_CARD = 1
 const COLLISION_MASK_DECK = 2
-#const COLLISION_MASK_DISCARD = 4
+const COLLISION_MASK_DISCARD_AREA = 3
+const COLLISION_MASK_MELD_AREA = 4
 
 var is_dragging = false
 var drag_threshold = 10
@@ -39,10 +40,10 @@ func raycast_at_cursor():
 	
 	if result.size() > 0:
 		var result_collision_mask = result[0].collider.collision_mask
-		if result_collision_mask == COLLISION_MASK_CARD:
-			# gets the node of the card
-			var card_found = result[0].collider.get_parent()
-			
+		# gets the node of the card
+		var card_found = result[0].collider.get_parent()
+		
+		if result_collision_mask == COLLISION_MASK_CARD and !card_found.is_selected:
 			if is_dragging:
 				#$"../CardManager".handle_player_hand_sorting(card_found)
 				pass
@@ -52,9 +53,14 @@ func raycast_at_cursor():
 					$"../CardManager".handle_discard_pickup(card_found)
 				# if card is in players hand
 				else:
-					$"../CardManager".handle_discard(card_found)
+					card_found.is_selected = true
+					$"../CardManager".handle_select_card(card_found)
 					
 					emit_signal("card_clicked")
-
+		elif result_collision_mask == COLLISION_MASK_DISCARD_AREA:
+			# don't want to be able to drag selected cards, so won't handle here
+			$"../CardManager".handle_player_discards()
+		elif result_collision_mask == COLLISION_MASK_MELD_AREA:
+			pass
 		elif result_collision_mask  == COLLISION_MASK_DECK:
 			$"../CardManager".draw_card()
