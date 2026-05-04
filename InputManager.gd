@@ -15,17 +15,20 @@ func _input(event):
 		if event.pressed:
 			press_pos = event.position
 			is_dragging = false
-			
+		
+		# normal mouse click	
 		elif not is_dragging:
-			print("Clicked")
 			raycast_at_cursor()
+			
+		# normal mouse click release
 		else:
-			print("Finished Dragging")
 			is_dragging = false
+	
+	# click and dragging mouse
 	elif event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 		if event.position.distance_to(press_pos) > drag_threshold:
 			is_dragging = true
-			print("Dragging...")
+			raycast_at_cursor()
 			
 func raycast_at_cursor():
 	var space_state = get_world_2d().direct_space_state
@@ -39,15 +42,19 @@ func raycast_at_cursor():
 		if result_collision_mask == COLLISION_MASK_CARD:
 			# gets the node of the card
 			var card_found = result[0].collider.get_parent()
-
-			# if card is in discard pile
-			if card_found.is_discarded:
-				$"../CardManager".handle_discard_pickup(card_found)
-			# if card is in players hand
+			
+			if is_dragging:
+				#$"../CardManager".handle_player_hand_sorting(card_found)
+				pass
 			else:
-				$"../CardManager".handle_discard(card_found)
-				
-				emit_signal("card_clicked")
+				# if card is in discard pile
+				if card_found.is_discarded:
+					$"../CardManager".handle_discard_pickup(card_found)
+				# if card is in players hand
+				else:
+					$"../CardManager".handle_discard(card_found)
+					
+					emit_signal("card_clicked")
 
 		elif result_collision_mask  == COLLISION_MASK_DECK:
 			$"../CardManager".draw_card()

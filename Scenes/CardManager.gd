@@ -8,9 +8,14 @@ var game_deck = ["c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10", "cj",
 	"hj", "hq", "hk", "ha", "d2", "d3", "d4", "d5", "d6", "d7", "d8", "d9", 
 	"d10", "dj", "dq", "dk", "da", "s2", "s3", "s4", "s5", "s6", "s7", "s8", 
 	"s9", "s10", "sj", "sq", "sk", "sa"]
+	
+var card_being_dragged
+var screen_size
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	#var screen_size = get_viewport_rect().size
+	
 	# shuffle the deck
 	game_deck.shuffle()
 	
@@ -22,6 +27,10 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	#if card_being_dragged:
+		#var mouse_pos = get_global_mouse_position()
+		##card_being_dragged.position = Vector2(clamp(mouse_pos.x, 0, screen_size.x), clamp(mouse_pos.y, 0, screen_size.y))
+		#card_being_dragged.position = Vector2(mouse_pos.x, mouse_pos.y)
 	pass
 
 func draw_card():
@@ -68,5 +77,8 @@ func handle_discard_pickup(card):
 	
 	$"../PlayerHand".update_hand_positions()
 	$"../Discard".update_dicard_card_positions()
+	
+func handle_player_hand_sorting(card):
+	card_being_dragged = card
 	
 	
