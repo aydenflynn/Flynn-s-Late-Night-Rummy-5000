@@ -1,21 +1,30 @@
 [gd_scene format=3 uid="uid://bygesfimce7xi"]
 
-[ext_resource type="Script" uid="uid://c3eew7pw8l3un" path="res://Scenes/PlayerHand.gd" id="2_rgh2o"]
+[ext_resource type="Script" uid="uid://chj2mfm52kunc" path="res://Scenes/PlayerMelds.gd" id="2_jw32o"]
+[ext_resource type="Script" uid="uid://c3eew7pw8l3un" path="res://Scripts/PlayerHand.gd" id="2_rgh2o"]
 [ext_resource type="Texture2D" uid="uid://dns1c2yko50m4" path="res://Assets/Deck.png" id="3_kln2b"]
-[ext_resource type="Script" uid="uid://8ow2c8qvnqmk" path="res://Scenes/CardManager.gd" id="3_pbw6q"]
+[ext_resource type="Script" uid="uid://8ow2c8qvnqmk" path="res://Scripts/CardManager.gd" id="3_pbw6q"]
 [ext_resource type="Texture2D" uid="uid://b7w8t5gbdgufb" path="res://Assets/CardSlot.png" id="3_rgh2o"]
-[ext_resource type="Script" uid="uid://c6s5ouktags7w" path="res://Scenes/Discard.gd" id="3_v1gob"]
+[ext_resource type="Script" uid="uid://c6s5ouktags7w" path="res://Scripts/Discard.gd" id="3_v1gob"]
 [ext_resource type="Script" uid="uid://uhdqjyi36c8h" path="res://InputManager.gd" id="5_pbw6q"]
-[ext_resource type="PackedScene" uid="uid://dsg0u5n0wu0nx" path="res://Scenes/MeldArea.tscn" id="7_50glp"]
-[ext_resource type="PackedScene" uid="uid://ca28uu8edrpca" path="res://Scenes/DiscardArea.tscn" id="8_vy5pj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v1gob"]
 size = Vector2(180, 266.66663)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v1gob"]
+bg_color = Color(0.16923547, 0.2626713, 0.88400275, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jw32o"]
+bg_color = Color(0.91172284, 0, 0.0488785, 1)
 
 [node name="Main" type="Node2D" unique_id=1008083499]
 
 [node name="PlayerHand" type="Node2D" parent="." unique_id=310581570]
 script = ExtResource("2_rgh2o")
+
+[node name="PlayerMelds" type="Node2D" parent="." unique_id=1660696723]
+position = Vector2(400, 880)
+script = ExtResource("2_jw32o")
 
 [node name="CardManager" type="Node2D" parent="." unique_id=693620218]
 script = ExtResource("3_pbw6q")
@@ -53,10 +62,23 @@ text = "45"
 [node name="InputManager" type="Node2D" parent="." unique_id=597449497]
 script = ExtResource("5_pbw6q")
 
-[node name="MeldArea" parent="." unique_id=1662336444 instance=ExtResource("7_50glp")]
-visible = false
-position = Vector2(360, 870)
+[node name="MeldButton" type="Node2D" parent="." unique_id=2109781339]
+position = Vector2(200, 880)
 
-[node name="DiscardArea" parent="." unique_id=1851040029 instance=ExtResource("8_vy5pj")]
-visible = false
-position = Vector2(420.68, 660)
+[node name="Button" type="Button" parent="MeldButton" unique_id=479250549]
+offset_right = 150.0
+offset_bottom = 90.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_v1gob")
+text = "MELD"
+
+[node name="DiscardButton" type="Node2D" parent="." unique_id=515810476]
+position = Vector2(400, 880)
+
+[node name="Button" type="Button" parent="DiscardButton" unique_id=576207184]
+offset_right = 150.0
+offset_bottom = 90.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_jw32o")
+text = "DISCARD"
+
+[connection signal="pressed" from="MeldButton/Button" to="InputManager" method="meld_button_pressed"]
+[connection signal="pressed" from="DiscardButton/Button" to="InputManager" method="discard_button_pressed"]

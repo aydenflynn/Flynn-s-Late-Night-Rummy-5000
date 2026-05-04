@@ -38,29 +38,6 @@ func _process(delta: float) -> void:
 func draw_card():
 	$"../PlayerHand".draw_card(game_deck.pop_front())
 	$"../Deck/RichTextLabel".text = str(game_deck.size())
-
-func update_play_areas_status():
-	#if selected_cards.size() == 1:
-		#$"../DiscardArea".visible = true
-	#elif selected_cards.size() >= 3:
-		#$"../DiscardArea".visible = false
-		#$"../DiscardArea/Area2D/CollisionShape2D".disabled = true
-		#$"../MeldArea".visible = true
-	#else:
-		#$"../DiscardArea".visible = false
-		#$"../MeldArea".visible = false
-	
-	
-	if selected_cards.size() == 1:
-		print("hi")
-		$"..".add_child(get_node("res://Scenes/MeldArea.tscn"))
-	#elif selected_cards.size() >= 3:
-		#$"../DiscardArea".visible = false
-		#$"../DiscardArea/Area2D/CollisionShape2D".disabled = true
-		#$"../MeldArea".visible = true
-	#else:
-		#$"../DiscardArea".visible = false
-		#$"../MeldArea".visible = false
 		
 func handle_select_card(card):
 	card.is_selected = true
@@ -68,8 +45,6 @@ func handle_select_card(card):
 	
 	selected_cards.append(card)
 	$"../PlayerHand".player_hand.erase(card)
-
-	update_play_areas_status()
 	
 func handle_deselect_card(card):
 	card.is_selected = false
@@ -78,18 +53,38 @@ func handle_deselect_card(card):
 	$"../PlayerHand".player_hand.append(card)
 	selected_cards.erase(card)
 	
-	update_play_areas_status()
-	
 func handle_player_discards():
-	for card in selected_cards:
+	if selected_cards.size() == 1:
+		for card in selected_cards:
+			
+			$"../Discard".discard_deck.append(card)
+			selected_cards.erase(card)
 		
-		$"../Discard".discard_deck.append(card)
-		selected_cards.erase(card)
+			card.is_discarded = true 
+			card.is_selected = false
+		
+		$"../PlayerHand".update_hand_positions()
+		$"../Discard".update_dicard_card_positions()
+	else:
+		print("Trying to discard more than 1 card")
 	
-		card.is_discarded = true 
-	
-	$"../PlayerHand".update_hand_positions()
-	$"../Discard".update_dicard_card_positions()
+func handle_player_melds():
+	if selected_cards.size() >= 3:
+		for card in selected_cards:
+			card.is_selected = false
+			card.is_melded = true
+			
+		var temp_cards = selected_cards.duplicate()
+		print("meld button clicked")
+		$"../PlayerMelds".player_melds.append(temp_cards)
+		selected_cards.clear()
+		
+		$"../PlayerMelds".update_meld_positions()
+		
+		$"../PlayerHand".update_hand_positions()
+		
+	else:
+		print("Need minimum 3 cards to meld")
 	
 func handle_discard_pickup(card):
 	# handle multiple card pickup
@@ -123,7 +118,7 @@ func handle_discard_pickup(card):
 	$"../PlayerHand".update_hand_positions()
 	$"../Discard".update_dicard_card_positions()
 	
-func handle_player_hand_sorting(card):
-	card_being_dragged = card
+#func handle_player_hand_sorting(card):
+	#card_being_dragged = card
 	
 	

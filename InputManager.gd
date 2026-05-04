@@ -4,8 +4,8 @@ signal card_clicked
 
 const COLLISION_MASK_CARD = 1
 const COLLISION_MASK_DECK = 2
-const COLLISION_MASK_DISCARD_AREA = 3
-const COLLISION_MASK_MELD_AREA = 4
+const COLLISION_MASK_DISCARD_BUTTON = 3
+const COLLISION_MASK_MELD_BUTTON = 4
 
 var is_dragging = false
 var drag_threshold = 10
@@ -43,7 +43,7 @@ func raycast_at_cursor():
 		# gets the node of the card
 		var card_found = result[0].collider.get_parent()
 		
-		if result_collision_mask == COLLISION_MASK_CARD and !card_found.is_selected:
+		if result_collision_mask == COLLISION_MASK_CARD and !card_found.is_selected and !card_found.is_melded:
 			if is_dragging:
 				#$"../CardManager".handle_player_hand_sorting(card_found)
 				pass
@@ -59,12 +59,11 @@ func raycast_at_cursor():
 		elif result_collision_mask == COLLISION_MASK_CARD and card_found.is_selected:
 			$"../CardManager".handle_deselect_card(card_found)
 			
-		elif result_collision_mask == COLLISION_MASK_DISCARD_AREA:
-			# don't want to be able to drag selected cards, so won't handle here
-			$"../CardManager".handle_player_discards()
-			
-		elif result_collision_mask == COLLISION_MASK_MELD_AREA:
-			pass
-			
 		elif result_collision_mask  == COLLISION_MASK_DECK:
 			$"../CardManager".draw_card()
+
+func meld_button_pressed() -> void:
+	$"../CardManager".handle_player_melds()
+
+func discard_button_pressed() -> void:
+	$"../CardManager".handle_player_discards()
