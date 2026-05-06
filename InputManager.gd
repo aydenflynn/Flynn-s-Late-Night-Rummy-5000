@@ -8,6 +8,7 @@ const COLLISION_MASK_DISCARD_BUTTON = 3
 const COLLISION_MASK_MELD_BUTTON = 4
 
 var is_dragging = false
+var have_card_dragging = false
 var drag_threshold = 10
 var press_pos = Vector2.ZERO
 
@@ -18,12 +19,15 @@ func _input(event):
 			is_dragging = false
 		
 		# normal mouse click	
-		elif not is_dragging:
+		elif !is_dragging:
 			raycast_at_cursor()
 			
 		# normal mouse click release
 		else:
+			print("stop dragging")
 			is_dragging = false
+			$"../CardManager".stop_drag()
+			have_card_dragging = false
 	
 	# click and dragging mouse
 	elif event is InputEventMouseMotion and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
@@ -43,18 +47,19 @@ func raycast_at_cursor():
 		# gets the node of the card
 		var card_found = result[0].collider.get_parent()
 		
-		if result_collision_mask == COLLISION_MASK_CARD and !card_found.is_selected and !card_found.is_melded:
-			if is_dragging:
-				#$"../CardManager".handle_player_hand_sorting(card_found)
-				pass
+		if result_collision_mask == COLLISION_MASK_CARD and is_dragging and !have_card_dragging:
+			$"../CardManager".start_drag(card_found)
+			have_card_dragging = true
+			
+		elif result_collision_mask == COLLISION_MASK_CARD and !card_found.is_selected and !card_found.is_melded and !is_dragging:
+			
+			# if card is in discard pile
+			if card_found.is_discarded:
+				$"../CardManager".handle_discard_pickup(card_found)
+			# if card is in players hand
 			else:
-				# if card is in discard pile
-				if card_found.is_discarded:
-					$"../CardManager".handle_discard_pickup(card_found)
-				# if card is in players hand
-				else:
-					$"../CardManager".handle_select_card(card_found)
-					emit_signal("card_clicked")
+				$"../CardManager".handle_select_card(card_found)
+				emit_signal("card_clicked")
 					
 		elif result_collision_mask == COLLISION_MASK_CARD and card_found.is_selected:
 			$"../CardManager".handle_deselect_card(card_found)
