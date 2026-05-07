@@ -3,7 +3,7 @@ extends Node2D
 const STARTING_NUMBER_OF_CARDS = 7
 const DISCARD_POSITON = Vector2(420, 660)
 
-var card_values = ["a", "2", "3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k", "a"]
+var card_values = ["placeholder", "a", "2", "3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k", "a"]
 
 var game_deck = ["c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10", "cj", 
 	"cq", "ck", "ca", "h2", "h3", "h4", "h5", "h6", "h7", "h8", "h9", "h10", 
@@ -82,21 +82,18 @@ func handle_player_discards():
 func set_checker():
 	var temp_value = selected_cards[0].name
 	var first_card_value = temp_value.substr(1, temp_value.length())
-	print(first_card_value)
 	
 	for index in range(selected_cards.size()):
 		var current_card_temp_value = selected_cards[index].name
 		var current_card_value = current_card_temp_value.substr(1, current_card_temp_value.length())
 		if current_card_value != first_card_value:
+			print("Not a set")
 			return false
 			
 	return true	
 
 func run_checker():
 	var temp_array = []
-	
-	#var temp_value = selected_cards[0].name
-	#var first_card_value = temp_value.substr(1, temp_value.length())
 	
 	# sort selected_cards by card value
 	var value_array = []
@@ -110,19 +107,18 @@ func run_checker():
 	for index in value_array:
 		temp_array.append(card_values[index])
 	
-	# NOT CURRENTLY WORKING
 	# now selected cards have been sorted into temp_array, check for run
 	var current_value = temp_array[0]
+
 	for value in temp_array:
+		# bypass first iteration
+		if temp_array.find(value) == 0: continue
+		
 		if !(card_values.find(value) - card_values.find(current_value) == 1):
-			print("not a run")
+			print("Not a run")
 			return false
+		current_value = value
 	return true
-	
-	#var card_value_in_run_array = card_values.find(first_card_value)
-	#print(card_value_in_run_array)
-	
-	# THEN CHECK THE NEXT CARD AND MAKE SURE IT IS ONLY ONE AWAY IN THE RUN ARRAY
 
 func handle_player_melds():
 	#TODO need to handle meld checking and for layoff of single card
