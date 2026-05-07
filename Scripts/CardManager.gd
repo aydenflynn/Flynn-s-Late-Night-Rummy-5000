@@ -3,6 +3,8 @@ extends Node2D
 const STARTING_NUMBER_OF_CARDS = 7
 const DISCARD_POSITON = Vector2(420, 660)
 
+var card_values = ["a", "2", "3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k", "a"]
+
 var game_deck = ["c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10", "cj", 
 	"cq", "ck", "ca", "h2", "h3", "h4", "h5", "h6", "h7", "h8", "h9", "h10", 
 	"hj", "hq", "hk", "ha", "d2", "d3", "d4", "d5", "d6", "d7", "d8", "d9", 
@@ -32,10 +34,12 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	
+	# move card being dragged with cursor
 	if card_being_dragged:
 		var mouse_pos = get_global_mouse_position()
 		#card_being_dragged.position = Vector2(clamp(mouse_pos.x, 0, screen_size.x), clamp(mouse_pos.y, 0, screen_size.y))
-		card_being_dragged.position = Vector2(mouse_pos.x, mouse_pos.y)
+		card_being_dragged.position = Vector2(mouse_pos.x, clamp(mouse_pos.y, 1100, 1100))
 		
 		#start_drag(card_being_dragged)
 	pass
@@ -74,10 +78,75 @@ func handle_player_discards():
 		handle_round_over()
 	else:
 		print("Need 1 card selected to discard")
+
+func set_checker():
+	var temp_value = selected_cards[0].name
+	var first_card_value = temp_value.substr(1, temp_value.length())
+	print(first_card_value)
 	
+	for index in range(selected_cards.size()):
+		var current_card_temp_value = selected_cards[index].name
+		var current_card_value = current_card_temp_value.substr(1, current_card_temp_value.length())
+		if current_card_value != first_card_value:
+			return false
+			
+	return true	
+
+func run_checker():
+	var temp_array = []
+	
+	#var temp_value = selected_cards[0].name
+	#var first_card_value = temp_value.substr(1, temp_value.length())
+	
+	# sort selected_cards by card value
+	var value_array = []
+	for index in range(selected_cards.size()):
+		var temp_value = selected_cards[index].name
+		var current_card_value = temp_value.substr(1, temp_value.length())
+		value_array.append(card_values.find(current_card_value))
+		
+	value_array.sort()
+	
+	for index in value_array:
+		temp_array.append(card_values[index])
+	
+	# NOT CURRENTLY WORKING
+	# now selected cards have been sorted into temp_array, check for run
+	var current_value = temp_array[0]
+	for value in temp_array:
+		if !(card_values.find(value) - card_values.find(current_value) == 1):
+			print("not a run")
+			return false
+	return true
+	
+	#var card_value_in_run_array = card_values.find(first_card_value)
+	#print(card_value_in_run_array)
+	
+	# THEN CHECK THE NEXT CARD AND MAKE SURE IT IS ONLY ONE AWAY IN THE RUN ARRAY
+
 func handle_player_melds():
 	#TODO need to handle meld checking and for layoff of single card
-	#if selected_cards.size() >= 3:
+	
+	if selected_cards.size() >= 3:
+		# handle set of cards
+		if set_checker():
+			print("it is a set")
+		
+		# handle run of cards
+		if run_checker():
+			print("it is a run")
+		
+		pass
+	
+	# handle layoff 
+	elif selected_cards.size() == 1:
+		pass
+	
+	# not a legal meld
+	else:
+		print("Not a legal meld")
+	
+	# ALL THE BELOW CODE NEEDS TO PUT IN WHERE A PROPER SET IS FOUND
 	for card in selected_cards:
 		card.is_selected = false
 		card.is_melded = true
@@ -92,9 +161,6 @@ func handle_player_melds():
 	$"../PlayerHand".update_hand_positions()
 	
 	handle_round_over()
-		
-	#else:
-		#print("Need minimum 3 cards to meld")
 	
 func handle_discard_pickup(card):
 	# handle multiple card pickup
