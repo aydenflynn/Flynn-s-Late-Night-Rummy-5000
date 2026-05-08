@@ -7,7 +7,6 @@ const CARD_WIDTH = 100
 const DEFAULT_CARD_SCALE = 0.4
 const CARD_BIGGER_SCALE = 0.45
 
-
 var player_hand = []
 var center_screen_x
 

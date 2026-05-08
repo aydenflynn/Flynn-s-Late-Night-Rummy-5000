@@ -11,6 +11,8 @@ var game_deck = ["c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10", "cj",
 	"d10", "dj", "dq", "dk", "da", "s2", "s3", "s4", "s5", "s6", "s7", "s8", 
 	"s9", "s10", "sj", "sq", "sk", "sa"]
 	
+var TEST_DECK = ["sa", "sk", "sq", "s2", "s3", "s5"]
+	
 var selected_cards = []
 	
 var card_being_dragged
@@ -23,9 +25,13 @@ func _ready() -> void:
 	# shuffle the deck
 	game_deck.shuffle()
 	
-	# draw cards
-	for i in range(STARTING_NUMBER_OF_CARDS):
-		$"../PlayerHand".draw_card(game_deck.pop_front())
+	# draw cards and allow for a test deck to be used if the TEST_DECK array has cards set in it
+	if TEST_DECK:
+		for card in TEST_DECK.size():
+			$"../PlayerHand".draw_card(TEST_DECK.pop_front())
+	else:
+		for i in range(STARTING_NUMBER_OF_CARDS):
+			$"../PlayerHand".draw_card(game_deck.pop_front())
 		
 	$"../Deck/RichTextLabel".text = str(game_deck.size())
 	
@@ -92,6 +98,9 @@ func set_checker():
 			
 	return true	
 
+#TODO BUT WHAT ABOUT ACE HIGH RUNS???
+#TODO check if there is a king present and if so, use the second high ace value?
+#TODO a run with a high ace always needs a king
 func run_checker():
 	var temp_array = []
 	
@@ -126,11 +135,11 @@ func handle_player_melds():
 	if selected_cards.size() >= 3:
 		# handle set of cards
 		if set_checker():
-			print("it is a set")
+			print("It is a set")
 		
 		# handle run of cards
 		if run_checker():
-			print("it is a run")
+			print("It is a run")
 		
 		pass
 	
@@ -234,6 +243,7 @@ func handle_round_over():
 		#}
 	#}
 
+#TODO SORTING WORKS TO THE RIGHT, BUT NOT TO THE LEFT
 func card_sort_swap(other_card_index, card_being_dragged_index):
 	var temp = $"../PlayerHand".player_hand[other_card_index]
 	$"../PlayerHand".player_hand[other_card_index] = $"../PlayerHand".player_hand[card_being_dragged_index]
@@ -254,6 +264,8 @@ func start_drag(card):
 	card_being_dragged = card
 	var card_being_dragged_index = $"../PlayerHand".player_hand.find(card_being_dragged)
 	
+	# HANDLE PLAYER SORTING
+	#TODO SORTING WORKS TO THE RIGHT, BUT NOT TO THE LEFT
 	for other_card_index in range($"../PlayerHand".player_hand.size()):
 		if card_being_dragged.position.x > $"../PlayerHand".player_hand[other_card_index].position.x:
 			if card_being_dragged_index < $"../PlayerHand".player_hand.find(other_card_index):

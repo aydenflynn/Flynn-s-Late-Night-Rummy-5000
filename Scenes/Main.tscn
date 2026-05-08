@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bygesfimce7xi"]
 
 [ext_resource type="Script" uid="uid://b0k5hqoe6fv7x" path="res://Scenes/Player.gd" id="1_50glp"]
+[ext_resource type="Script" uid="uid://dyfj007rmw1gl" path="res://Scenes/GameManager.gd" id="1_vy5pj"]
 [ext_resource type="Script" uid="uid://chj2mfm52kunc" path="res://Scenes/PlayerMelds.gd" id="2_jw32o"]
 [ext_resource type="Script" uid="uid://c3eew7pw8l3un" path="res://Scripts/PlayerHand.gd" id="2_rgh2o"]
 [ext_resource type="Texture2D" uid="uid://dns1c2yko50m4" path="res://Assets/Deck.png" id="3_kln2b"]
@@ -18,7 +19,8 @@ bg_color = Color(0.16923547, 0.2626713, 0.88400275, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jw32o"]
 bg_color = Color(0.91172284, 0, 0.0488785, 1)
 
-[node name="Main" type="Node2D" unique_id=1008083499]
+[node name="GameManager" type="Node2D" unique_id=1008083499]
+script = ExtResource("1_vy5pj")
 
 [node name="Player" type="Node2D" parent="." unique_id=1808658493]
 script = ExtResource("1_50glp")

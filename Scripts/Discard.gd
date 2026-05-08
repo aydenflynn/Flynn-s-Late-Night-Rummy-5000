@@ -16,7 +16,6 @@ func _process(delta: float) -> void:
 func handle_click():
 	pass
 
-
 func update_dicard_card_positions():
 	if discard_deck.size() > 0:
 		for i in range(discard_deck.size()):
