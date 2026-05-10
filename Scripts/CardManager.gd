@@ -3,7 +3,8 @@ extends Node2D
 const STARTING_NUMBER_OF_CARDS = 7
 const DISCARD_POSITON = Vector2(420, 660)
 
-var card_values = ["placeholder", "a", "2", "3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k", "a"]
+var card_values_high_ace = ["placeholder", "2", "3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k", "a"]
+var card_values_low_ace = ["placeholder", "a", "2", "3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k"]
 
 var game_deck = ["c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10", "cj", 
 	"cq", "ck", "ca", "h2", "h3", "h4", "h5", "h6", "h7", "h8", "h9", "h10", 
@@ -11,7 +12,7 @@ var game_deck = ["c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10", "cj",
 	"d10", "dj", "dq", "dk", "da", "s2", "s3", "s4", "s5", "s6", "s7", "s8", 
 	"s9", "s10", "sj", "sq", "sk", "sa"]
 	
-var TEST_DECK = ["sa", "sk", "sq", "s2", "s3", "s5"]
+var TEST_DECK = ["sj", "sk", "hq"]
 	
 var selected_cards = []
 	
@@ -99,34 +100,45 @@ func set_checker():
 	return true	
 
 #TODO BUT WHAT ABOUT ACE HIGH RUNS???
-#TODO check if there is a king present and if so, use the second high ace value?
-#TODO a run with a high ace always needs a king
+	# check if there is a king present and if so, use the second high ace value?
+	# a run with a high ace always needs a king
 func run_checker():
-	var temp_array = []
+	var suits = []
+	var temp_values = []
+	var values = []
 	
-	# sort selected_cards by card value
-	var value_array = []
-	for index in range(selected_cards.size()):
-		var temp_value = selected_cards[index].name
-		var current_card_value = temp_value.substr(1, temp_value.length())
-		value_array.append(card_values.find(current_card_value))
+	for card in selected_cards:
+		var temp = ""
+		temp = card.name.substr(0,1)
+		suits.append(temp)
 		
-	value_array.sort()
+		temp = card.name.substr(1, card.name.length())
+		temp_values.append(temp)
 	
-	for index in value_array:
-		temp_array.append(card_values[index])
-	
-	# now selected cards have been sorted into temp_array, check for run
-	var current_value = temp_array[0]
-
-	for value in temp_array:
-		# bypass first iteration
-		if temp_array.find(value) == 0: continue
+	# check all the same suit
+	if !(suits.all(func(element): return element == suits[0])): 
+		print("Not a run")
+		return false
 		
-		if !(card_values.find(value) - card_values.find(current_value) == 1):
-			print("Not a run")
-			return false
-		current_value = value
+	# check if valid run values
+	for item in temp_values:
+		if temp_values.find("k") != -1:
+		# if there is a king: card_values_high_ace
+		# else: card_values_low_ace
+			values.append(card_values_high_ace.find(item))
+		else:
+			values.append(card_values_low_ace.find(item))
+	values.sort()
+	
+	# I THINK THIS COULD BE A RECURSIVE FUNCTION
+	for index in range(values.size()):
+		# if not the last index
+		if index != values.size() - 1:
+			if (values[index + 1]) - values[index] != 1:
+				print("Not a run")
+				return false
+	
+	# passed the checks, it is a run
 	return true
 
 func handle_player_melds():
@@ -135,11 +147,11 @@ func handle_player_melds():
 	if selected_cards.size() >= 3:
 		# handle set of cards
 		if set_checker():
-			print("It is a set")
+			print("Is a set")
 		
 		# handle run of cards
 		if run_checker():
-			print("It is a run")
+			print("Is a run")
 		
 		pass
 	
