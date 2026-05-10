@@ -12,7 +12,7 @@ var game_deck = ["c2", "c3", "c4", "c5", "c6", "c7", "c8", "c9", "c10", "cj",
 	"d10", "dj", "dq", "dk", "da", "s2", "s3", "s4", "s5", "s6", "s7", "s8", 
 	"s9", "s10", "sj", "sq", "sk", "sa"]
 	
-var TEST_DECK = ["sj", "sk", "hq"]
+var TEST_DECK = []
 	
 var selected_cards = []
 	
@@ -99,9 +99,6 @@ func set_checker():
 			
 	return true	
 
-#TODO BUT WHAT ABOUT ACE HIGH RUNS???
-	# check if there is a king present and if so, use the second high ace value?
-	# a run with a high ace always needs a king
 func run_checker():
 	var suits = []
 	var temp_values = []
@@ -255,7 +252,6 @@ func handle_round_over():
 		#}
 	#}
 
-#TODO SORTING WORKS TO THE RIGHT, BUT NOT TO THE LEFT
 func card_sort_swap(other_card_index, card_being_dragged_index):
 	var temp = $"../PlayerHand".player_hand[other_card_index]
 	$"../PlayerHand".player_hand[other_card_index] = $"../PlayerHand".player_hand[card_being_dragged_index]
@@ -276,9 +272,12 @@ func start_drag(card):
 	card_being_dragged = card
 	var card_being_dragged_index = $"../PlayerHand".player_hand.find(card_being_dragged)
 	
-	# HANDLE PLAYER SORTING
+	# handle player sorting
 	#TODO SORTING WORKS TO THE RIGHT, BUT NOT TO THE LEFT
+		# BECAUSE WE DONT CHECK IF SOME THRESHHOLD HAS BEEN PASSED SO IT JUST CALLS THE SWAP TO THE RIGHT
+		# BECAUSE IT COMES FIRST
 	for other_card_index in range($"../PlayerHand".player_hand.size()):
+		# if threshold crossed: then run the below 
 		if card_being_dragged.position.x > $"../PlayerHand".player_hand[other_card_index].position.x:
 			if card_being_dragged_index < $"../PlayerHand".player_hand.find(other_card_index):
 				card_sort_swap(other_card_index, card_being_dragged_index)
