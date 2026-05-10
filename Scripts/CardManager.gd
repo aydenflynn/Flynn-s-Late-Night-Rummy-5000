@@ -2,6 +2,7 @@ extends Node2D
 
 const STARTING_NUMBER_OF_CARDS = 7
 const DISCARD_POSITON = Vector2(420, 660)
+const CARD_SCENE_PATH = "res://Scenes/Card.tscn"
 
 var card_values_high_ace = ["placeholder", "2", "3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k", "a"]
 var card_values_low_ace = ["placeholder", "a", "2", "3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k"]
@@ -34,6 +35,23 @@ func _ready() -> void:
 		for i in range(STARTING_NUMBER_OF_CARDS):
 			$"../PlayerHand".draw_card(game_deck.pop_front())
 		
+	# flip the first card to start the game
+	var first_card = game_deck.pop_front()
+	
+	var card_scene = preload(CARD_SCENE_PATH)
+	var new_card = card_scene.instantiate()
+	
+	var card_image_path = "res://Assets/cards/png/" + first_card + ".png"
+	new_card.get_node("CardImage").texture = load(card_image_path)
+	
+	# All cards must be a child of CardManager
+	add_child.call_deferred(new_card)
+	new_card.name = first_card
+	new_card.is_discarded = true
+	
+	$"../Discard".discard_deck.append(new_card)
+	$"../Discard".update_dicard_card_positions()
+	
 	$"../Deck/RichTextLabel".text = str(game_deck.size())
 	
 	# display the players total score
