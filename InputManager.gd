@@ -24,7 +24,6 @@ func _input(event):
 			
 		# normal mouse click release
 		else:
-			print("stop dragging")
 			is_dragging = false
 			$"../CardManager".stop_drag()
 			have_card_dragging = false
@@ -47,11 +46,13 @@ func raycast_at_cursor():
 		# gets the node of the card
 		var card_found = result[0].collider.get_parent()
 		
-		if result_collision_mask == COLLISION_MASK_CARD and is_dragging and !have_card_dragging:
+		if (result_collision_mask == COLLISION_MASK_CARD and is_dragging 
+		and !have_card_dragging and !card_found.is_melded):
 			$"../CardManager".start_drag(card_found)
 			have_card_dragging = true
 			
-		elif result_collision_mask == COLLISION_MASK_CARD and !card_found.is_selected and !card_found.is_melded and !is_dragging:
+		elif (result_collision_mask == COLLISION_MASK_CARD and 
+		!card_found.is_selected and !card_found.is_melded and !is_dragging):
 			
 			# if card is in discard pile
 			if card_found.is_discarded:

@@ -22,8 +22,29 @@ var screen_size
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	#var screen_size = get_viewport_rect().size
+	round_setup()
 	
+	# display the players total score
+	$"../Player/RichTextLabel".text = "Score: " + str($"../Player".total_score)
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	
+	# move card being dragged with cursor
+	if card_being_dragged:
+		var mouse_pos = get_global_mouse_position()
+		#card_being_dragged.position = Vector2(clamp(mouse_pos.x, 0, screen_size.x), clamp(mouse_pos.y, 0, screen_size.y))
+		card_being_dragged.position = Vector2(mouse_pos.x, clamp(mouse_pos.y, 1100, 1100))
+		
+		
+		start_drag(card_being_dragged)
+	
+	#var card_being_dragged_index = $"../PlayerHand".player_hand.find(card_being_dragged)
+	#print(card_being_dragged_index)
+	##if card_being_dragged.position.x == $"../PlayerHand".player_hand[card_being_dragged_index + 1].position.x:
+		##print("threshold")
+	
+func round_setup():
 	# shuffle the deck
 	game_deck.shuffle()
 	
@@ -53,21 +74,6 @@ func _ready() -> void:
 	$"../Discard".update_dicard_card_positions()
 	
 	$"../Deck/RichTextLabel".text = str(game_deck.size())
-	
-	# display the players total score
-	$"../Player/RichTextLabel".text = "Score: " + str($"../Player".total_score)
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	
-	# move card being dragged with cursor
-	if card_being_dragged:
-		var mouse_pos = get_global_mouse_position()
-		#card_being_dragged.position = Vector2(clamp(mouse_pos.x, 0, screen_size.x), clamp(mouse_pos.y, 0, screen_size.y))
-		card_being_dragged.position = Vector2(mouse_pos.x, clamp(mouse_pos.y, 1100, 1100))
-		
-		#start_drag(card_being_dragged)
-	pass
 
 func draw_card():
 	$"../PlayerHand".draw_card(game_deck.pop_front())
@@ -243,68 +249,27 @@ func handle_round_over():
 				
 		$"../Player/RichTextLabel".text = "Score: " + str($"../Player".total_score)
 
-# use this as example
-#void Swap(int index)
-	#{
-		#isCrossing = true;
-#
-		#Transform focusedParent = selectedCard.transform.parent;
-		#Transform crossedParent = cards[index].transform.parent;
-#
-		#cards[index].transform.SetParent(focusedParent);
-		#cards[index].transform.localPosition = cards[index].selected ? new Vector3(0, cards[index].selectionOffset, 0) : Vector3.zero;
-		#selectedCard.transform.SetParent(crossedParent);
-#
-		#isCrossing = false;
-#
-		#if (cards[index].cardVisual == null)
-			#return;
-#
-		#bool swapIsRight = cards[index].ParentIndex() > selectedCard.ParentIndex();
-		#cards[index].cardVisual.Swap(swapIsRight ? -1 : 1);
-#
-		#//Updated Visual Indexes
-		#foreach (Card card in cards)
-		#{
-			#card.cardVisual.UpdateIndex(transform.childCount);
-		#}
-	#}
-
 func card_sort_swap(other_card_index, card_being_dragged_index):
 	var temp = $"../PlayerHand".player_hand[other_card_index]
 	$"../PlayerHand".player_hand[other_card_index] = $"../PlayerHand".player_hand[card_being_dragged_index]
 	$"../PlayerHand".player_hand[card_being_dragged_index] = temp
 	$"../PlayerHand".update_hand_positions()
-	print("swapped")
-	#var my_array = ["A", "B", "C"]
-	#var index1 = 0
-	#var index2 = 2
-#
-	#var temp = my_array[index1]  # Store "A"
-	#my_array[index1] = my_array[index2]  # Set index 0 to "C"
-	#my_array[index2] = temp  # Set index 2 to "A"
-#
-	## Result: ["C", "B", "A"]
 
 func start_drag(card):
 	card_being_dragged = card
 	var card_being_dragged_index = $"../PlayerHand".player_hand.find(card_being_dragged)
 	
-	# handle player sorting
-	#TODO SORTING WORKS TO THE RIGHT, BUT NOT TO THE LEFT
-		# BECAUSE WE DONT CHECK IF SOME THRESHHOLD HAS BEEN PASSED SO IT JUST CALLS THE SWAP TO THE RIGHT
-		# BECAUSE IT COMES FIRST
-	for other_card_index in range($"../PlayerHand".player_hand.size()):
-		# if threshold crossed: then run the below 
-		if card_being_dragged.position.x > $"../PlayerHand".player_hand[other_card_index].position.x:
-			if card_being_dragged_index < $"../PlayerHand".player_hand.find(other_card_index):
-				card_sort_swap(other_card_index, card_being_dragged_index)
-				break
-			
-		if card_being_dragged.position.x < $"../PlayerHand".player_hand[other_card_index].position.x:
-			if card_being_dragged_index > $"../PlayerHand".player_hand.find(other_card_index):
-				card_sort_swap(other_card_index, card_being_dragged_index)
-				break
+	# SWAP RIGHT
+	# check if not last card
+	if !(card_being_dragged_index == $"../PlayerHand".player_hand.size() - 1):
+		if card_being_dragged.position.x > $"../PlayerHand".player_hand[card_being_dragged_index + 1].position.x:
+			card_sort_swap(card_being_dragged_index + 1, card_being_dragged_index)
+
+	# SWAP LEFT
+	# check if not first card
+	if !(card_being_dragged_index == 0):
+		if card_being_dragged.position.x < $"../PlayerHand".player_hand[card_being_dragged_index - 1].position.x:
+			card_sort_swap(card_being_dragged_index - 1, card_being_dragged_index)
 	
 func stop_drag():
 	card_being_dragged = null
