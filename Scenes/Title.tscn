@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bcigpfks0ii75"]
 
 [ext_resource type="Script" uid="uid://dl80rjlopuysn" path="res://Scripts/TitleScreen.gd" id="1_tochr"]
+[ext_resource type="AudioStream" uid="uid://bqdelfrerav1n" path="res://Sounds/817556__silverdubloons__chip05.wav" id="2_phf2g"]
 
 [sub_resource type="Animation" id="Animation_tochr"]
 length = 0.001
@@ -352,6 +353,18 @@ tracks/28/keys = {
 "update": 0,
 "values": [Vector2(1, 1)]
 }
+tracks/29/type = "value"
+tracks/29/imported = false
+tracks/29/enabled = true
+tracks/29/path = NodePath("Click:playing")
+tracks/29/interp = 1
+tracks/29/loop_wrap = true
+tracks/29/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
 
 [sub_resource type="Animation" id="Animation_gc30f"]
 resource_name = "TitleScreen"
@@ -699,10 +712,22 @@ tracks/28/path = NodePath("_0_3:scale")
 tracks/28/interp = 1
 tracks/28/loop_wrap = true
 tracks/28/keys = {
-"times": PackedFloat32Array(13.766666, 14),
+"times": PackedFloat32Array(13.733334, 14),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Vector2(1, 1), Vector2(1.05, 1.05)]
+}
+tracks/29/type = "value"
+tracks/29/imported = false
+tracks/29/enabled = true
+tracks/29/path = NodePath("Click:playing")
+tracks/29/interp = 1
+tracks/29/loop_wrap = true
+tracks/29/keys = {
+"times": PackedFloat32Array(1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.266666, 13.5, 13.733334),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_tochr"]
@@ -1006,5 +1031,8 @@ theme_override_font_sizes/font_size = 64
 text = "FLYNN'S LATE NIGHT 
 RUMMY 5000"
 horizontal_alignment = 1
+
+[node name="Click" type="AudioStreamPlayer2D" parent="." unique_id=1367877172]
+stream = ExtResource("2_phf2g")
 
 [connection signal="animation_finished" from="AnimationPlayer" to="AnimationPlayer" method="_on_animation_finished"]

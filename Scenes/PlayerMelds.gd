@@ -11,7 +11,7 @@ func _ready() -> void:
 	center_screen_x = get_viewport().size.x / 2
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
 func update_meld_positions():

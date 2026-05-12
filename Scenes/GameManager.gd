@@ -7,7 +7,7 @@ func _ready() -> void:
 	is_round_over = false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
 func placeholder_or_future_handle_roundover():

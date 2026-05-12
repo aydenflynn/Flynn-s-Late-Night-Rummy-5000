@@ -53,6 +53,7 @@ func raycast_at_cursor():
 			
 		elif (result_collision_mask == COLLISION_MASK_CARD and 
 		!card_found.is_selected and !card_found.is_melded and !is_dragging):
+			$"../Click".play()
 			
 			# if card is in discard pile
 			if card_found.is_discarded:
@@ -63,13 +64,17 @@ func raycast_at_cursor():
 				emit_signal("card_clicked")
 					
 		elif result_collision_mask == COLLISION_MASK_CARD and card_found.is_selected:
+			$"../Click".play()
 			$"../CardManager".handle_deselect_card(card_found)
 			
 		elif result_collision_mask  == COLLISION_MASK_DECK:
+			$"../Click".play()
 			$"../CardManager".draw_card()
 
 func meld_button_pressed() -> void:
+	$"../Cashout".play()
 	$"../CardManager".handle_player_melds()
 
 func discard_button_pressed() -> void:
+	$"../Click".play()
 	$"../CardManager".handle_player_discards()

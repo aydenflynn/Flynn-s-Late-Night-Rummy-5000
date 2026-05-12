@@ -2,7 +2,8 @@ extends Node2D
 
 const CARD_SCENE_PATH = "res://Scenes/Card.tscn"
 const HAND_Y_POSITION = 1100
-const CARD_WIDTH = 100
+# to make it work currently, should be 100
+const CARD_WIDTH = 50
 
 const DEFAULT_CARD_SCALE = 0.4
 const CARD_BIGGER_SCALE = 0.45
@@ -14,7 +15,7 @@ func _ready() -> void:
 	center_screen_x = get_viewport().size.x / 2
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
 func draw_card(card):
@@ -43,11 +44,19 @@ func draw_card(card):
 		#animate_card_to_position(card, card.starting_position, DEFAULT_CARD_MOVE_SPEED)
 	#
 func update_hand_positions():
+	var current_z_index = 0
+	
 	for i in range(player_hand.size()):
-		var new_position = Vector2(calculate_card_position(i), HAND_Y_POSITION)
 		var card = player_hand[i]
+		
+		# set the Z Index ordering
+		card.z_index = current_z_index
+		
+		var new_position = Vector2(calculate_card_position(i), HAND_Y_POSITION)
 		card.position = new_position
 		#animate_card_to_position(card, new_position, speed)
+		
+		current_z_index += 1
 		
 func calculate_card_position(index):
 	var x_offset = (player_hand.size() - 1) * CARD_WIDTH

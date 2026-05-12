@@ -28,7 +28,7 @@ func _ready() -> void:
 	$"../Player/RichTextLabel".text = "Score: " + str($"../Player".total_score)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	
 	# move card being dragged with cursor
 	if card_being_dragged:
@@ -171,18 +171,28 @@ func handle_player_melds():
 			print("Is a set")
 		
 		# handle run of cards
-		if run_checker():
+		elif run_checker():
 			print("Is a run")
-		
-		pass
+			
+		else:
+			#var temp_cards = selected_cards.duplicate()
+			#$"../PlayerMelds".player_melds.append(temp_cards)
+			#selected_cards.clear()
+			#
+			#$"../PlayerHand".update_hand_positions()
+			print("Not a legal meld")
+			return
+			
 	
 	# handle layoff 
 	elif selected_cards.size() == 1:
-		pass
-	
-	# not a legal meld
-	else:
-		print("Not a legal meld")
+		#for meld_number in range($"../PlayerMelds".player_melds.size()):
+			#for index in $"../PlayerMelds".player_melds[meld_number]:
+				# check if new card is the same as the suits in the meld
+				# could be good to somehow attach the suit information in player_melds for the meld
+				# when we are already checking the meld
+				#if suits.all(func(element): return element == suits[0]): 
+		return
 	
 	# ALL THE BELOW CODE NEEDS TO PUT IN WHERE A PROPER SET IS FOUND
 	for card in selected_cards:
@@ -250,6 +260,7 @@ func handle_round_over():
 		$"../Player/RichTextLabel".text = "Score: " + str($"../Player".total_score)
 
 func card_sort_swap(other_card_index, card_being_dragged_index):
+	$"../Click".play()
 	var temp = $"../PlayerHand".player_hand[other_card_index]
 	$"../PlayerHand".player_hand[other_card_index] = $"../PlayerHand".player_hand[card_being_dragged_index]
 	$"../PlayerHand".player_hand[card_being_dragged_index] = temp
