@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dl80rjlopuysn" path="res://Scripts/TitleScreen.gd" id="1_tochr"]
 [ext_resource type="AudioStream" uid="uid://bqdelfrerav1n" path="res://Sounds/817556__silverdubloons__chip05.wav" id="2_phf2g"]
+[ext_resource type="Texture2D" uid="uid://b7k2mp8vfge7c" path="res://Assets/Black_colour.jpg.webp" id="3_6khh7"]
 
 [sub_resource type="Animation" id="Animation_tochr"]
 length = 0.001
@@ -736,6 +737,12 @@ _data = {
 &"TitleScreen": SubResource("Animation_gc30f")
 }
 
+[sub_resource type="Gradient" id="Gradient_6khh7"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_bwrlp"]
+gradient = SubResource("Gradient_6khh7")
+fill_to = Vector2(0.004347826, 0.008695652)
+
 [node name="Control" type="Control" unique_id=1127664863]
 layout_mode = 3
 anchors_preset = 15
@@ -804,7 +811,7 @@ layout_mode = 0
 offset_left = 218.0
 offset_top = 551.0
 offset_right = 274.0
-offset_bottom = 650.0
+offset_bottom = 650.0001
 theme_override_font_sizes/font_size = 64
 text = "'"
 horizontal_alignment = 1
@@ -1034,5 +1041,32 @@ horizontal_alignment = 1
 
 [node name="Click" type="AudioStreamPlayer2D" parent="." unique_id=1367877172]
 stream = ExtResource("2_phf2g")
+
+[node name="Lighting Experiments" type="Node2D" parent="." unique_id=1534617747]
+
+[node name="DirectionalLight2D" type="DirectionalLight2D" parent="Lighting Experiments" unique_id=578083506]
+visible = false
+position = Vector2(378, 660)
+scale = Vector2(1.566, 2.0307345)
+blend_mode = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="Lighting Experiments" unique_id=1234330726]
+visible = false
+z_index = -1
+position = Vector2(378, 660)
+scale = Vector2(1.566, 2.0307345)
+texture = ExtResource("3_6khh7")
+
+[node name="PointLight2D" type="PointLight2D" parent="Lighting Experiments" unique_id=713711258]
+visible = false
+position = Vector2(208, 564)
+scale = Vector2(3.9218745, 3.9375)
+texture = SubResource("GradientTexture2D_bwrlp")
+
+[node name="PointLight2D2" type="PointLight2D" parent="Lighting Experiments" unique_id=1732968907]
+visible = false
+position = Vector2(538, 560)
+scale = Vector2(3.9218745, 3.9375)
+texture = SubResource("GradientTexture2D_bwrlp")
 
 [connection signal="animation_finished" from="AnimationPlayer" to="AnimationPlayer" method="_on_animation_finished"]

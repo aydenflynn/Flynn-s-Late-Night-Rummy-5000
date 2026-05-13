@@ -72,7 +72,6 @@ func raycast_at_cursor():
 			$"../CardManager".draw_card()
 
 func meld_button_pressed() -> void:
-	$"../Cashout".play()
 	$"../CardManager".handle_player_melds()
 
 func discard_button_pressed() -> void:

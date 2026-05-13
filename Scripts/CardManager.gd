@@ -33,16 +33,9 @@ func _process(_delta: float) -> void:
 	# move card being dragged with cursor
 	if card_being_dragged:
 		var mouse_pos = get_global_mouse_position()
-		#card_being_dragged.position = Vector2(clamp(mouse_pos.x, 0, screen_size.x), clamp(mouse_pos.y, 0, screen_size.y))
 		card_being_dragged.position = Vector2(mouse_pos.x, clamp(mouse_pos.y, 1100, 1100))
 		
-		
 		start_drag(card_being_dragged)
-	
-	#var card_being_dragged_index = $"../PlayerHand".player_hand.find(card_being_dragged)
-	#print(card_being_dragged_index)
-	##if card_being_dragged.position.x == $"../PlayerHand".player_hand[card_being_dragged_index + 1].position.x:
-		##print("threshold")
 	
 func round_setup():
 	# shuffle the deck
@@ -161,10 +154,51 @@ func run_checker():
 	
 	# passed the checks, it is a run
 	return true
-
-func handle_player_melds():
-	#TODO need to handle meld checking and for layoff of single card
 	
+func layoff_set_checker():
+	var card = selected_cards[0].name
+		
+	# check if there is a set to layoff in
+	for meld_number in range($"../PlayerMelds".player_melds.size()):
+		# if the first card in the meld matches, we know it is good
+		var value_to_check = $"../PlayerMelds".player_melds[meld_number][0].name.substr(1,  
+			$"../PlayerMelds".player_melds[meld_number][0].name.length())
+	
+		if !(value_to_check == card.substr(1, card.length())):
+			print("Can't layoff")
+			return false
+	
+	return true
+			
+func layoff_run_checker():
+	var card = selected_cards[0].name
+	
+	# check if there is a run to layoff in
+	for meld_number in range($"../PlayerMelds".player_melds.size()):
+		var value_to_check = $"../PlayerMelds".player_melds[meld_number][0].name.substr(0,1)
+		
+		# check if the first card's suit in the meld matches
+		if !(card.substr(0,1) == value_to_check):
+			return false
+		
+		for index in range($"../PlayerMelds".player_melds[meld_number].size()):
+			value_to_check = $"../PlayerMelds".player_melds[meld_number][index].name.substr(1,  
+				$"../PlayerMelds".player_melds[meld_number][index].name.length())
+			
+			if !(int(card.substr(1, card.length())) - int(value_to_check) == 1):
+				return false
+
+	return true
+			
+	#for meld_number in range($"../PlayerMelds".player_melds.size()):
+		#for index in $"../PlayerMelds".player_melds[meld_number]:
+			# check if new card is the same as the suits in the meld
+			# could be good to somehow attach the suit information in player_melds for the meld
+			# when we are already checking the meld
+			#if suits.all(func(element): return element == suits[0]): 
+	
+
+func handle_player_melds():	
 	if selected_cards.size() >= 3:
 		# handle set of cards
 		if set_checker():
@@ -175,6 +209,7 @@ func handle_player_melds():
 			print("Is a run")
 			
 		else:
+			# reset selected cards?
 			#var temp_cards = selected_cards.duplicate()
 			#$"../PlayerMelds".player_melds.append(temp_cards)
 			#selected_cards.clear()
@@ -183,16 +218,18 @@ func handle_player_melds():
 			print("Not a legal meld")
 			return
 			
-	
 	# handle layoff 
 	elif selected_cards.size() == 1:
-		#for meld_number in range($"../PlayerMelds".player_melds.size()):
-			#for index in $"../PlayerMelds".player_melds[meld_number]:
-				# check if new card is the same as the suits in the meld
-				# could be good to somehow attach the suit information in player_melds for the meld
-				# when we are already checking the meld
-				#if suits.all(func(element): return element == suits[0]): 
-		return
+		if layoff_set_checker():
+			pass
+		
+		elif layoff_run_checker():
+			pass
+		
+		else:
+			return 
+	
+	$"../Cashout".play()
 	
 	# ALL THE BELOW CODE NEEDS TO PUT IN WHERE A PROPER SET IS FOUND
 	for card in selected_cards:
