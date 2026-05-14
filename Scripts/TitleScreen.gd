@@ -1,6 +1,6 @@
 extends AnimationPlayer
 
-var play_title_screen = false
+var play_title_screen = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
