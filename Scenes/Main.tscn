@@ -44,6 +44,7 @@ script = ExtResource("2_jw32o")
 script = ExtResource("3_pbw6q")
 
 [node name="Discard" type="Node2D" parent="." unique_id=1911439475]
+visible = false
 position = Vector2(420, 660)
 scale = Vector2(0.6, 0.6)
 script = ExtResource("3_v1gob")
@@ -52,6 +53,7 @@ script = ExtResource("3_v1gob")
 texture = ExtResource("3_rgh2o")
 
 [node name="Deck" type="Node2D" parent="." unique_id=1274323632]
+visible = false
 position = Vector2(300, 660)
 scale = Vector2(0.6, 0.6)
 
@@ -77,6 +79,7 @@ text = "45"
 script = ExtResource("5_pbw6q")
 
 [node name="MeldButton" type="Node2D" parent="." unique_id=2109781339]
+visible = false
 position = Vector2(200, 880)
 
 [node name="Button" type="Button" parent="MeldButton" unique_id=479250549]
@@ -93,8 +96,10 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_v1gob")
 text = "MELD"
+metadata/_edit_use_anchors_ = true
 
 [node name="DiscardButton" type="Node2D" parent="." unique_id=515810476]
+visible = false
 position = Vector2(400, 880)
 
 [node name="Button" type="Button" parent="DiscardButton" unique_id=576207184]
@@ -118,9 +123,73 @@ stream = ExtResource("10_bmxlf")
 [node name="Cashout" type="AudioStreamPlayer2D" parent="." unique_id=1945413313]
 stream = ExtResource("11_4kpch")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1791321533]
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=941704724]
+
+[node name="Deck_Discard_Areas" type="HBoxContainer" parent="CanvasLayer" unique_id=1144237518]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="Button" type="Button" parent="CanvasLayer/Deck_Discard_Areas" unique_id=2119990988]
+custom_minimum_size = Vector2(115, 170)
+layout_mode = 2
+text = "Deck
+"
+
+[node name="Button2" type="Button" parent="CanvasLayer/Deck_Discard_Areas" unique_id=2053946841]
+custom_minimum_size = Vector2(115, 170)
+layout_mode = 2
+text = "Discard
+"
+
+[node name="Meld_Discard_Buttons" type="HBoxContainer" parent="CanvasLayer" unique_id=1791321533]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -55.0
+offset_top = -349.0
+offset_right = 55.0
+offset_bottom = -309.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 22
+
+[node name="Button" type="Button" parent="CanvasLayer/Meld_Discard_Buttons" unique_id=1501441363]
+custom_minimum_size = Vector2(150, 90)
+layout_mode = 2
+text = "Meld
+"
+
+[node name="Button2" type="Button" parent="CanvasLayer/Meld_Discard_Buttons" unique_id=1715087393]
+custom_minimum_size = Vector2(150, 90)
+layout_mode = 2
+text = "Discard
+"
+
+[node name="Score" type="Label" parent="CanvasLayer" unique_id=871644525]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -35.0
+offset_top = -49.0
+offset_right = 35.0
+offset_bottom = -26.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Score: 37"
 
 [connection signal="pressed" from="MeldButton/Button" to="InputManager" method="meld_button_pressed"]
 [connection signal="pressed" from="DiscardButton/Button" to="InputManager" method="discard_button_pressed"]
