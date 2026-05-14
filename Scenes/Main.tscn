@@ -100,5 +100,9 @@ stream = ExtResource("10_bmxlf")
 [node name="Cashout" type="AudioStreamPlayer2D" parent="." unique_id=1945413313]
 stream = ExtResource("11_4kpch")
 
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1791321533]
+offset_right = 40.0
+offset_bottom = 40.0
+
 [connection signal="pressed" from="MeldButton/Button" to="InputManager" method="meld_button_pressed"]
 [connection signal="pressed" from="DiscardButton/Button" to="InputManager" method="discard_button_pressed"]
